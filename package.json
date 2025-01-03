@@ -9,7 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "preact": "^10.25.2"
+    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2",
+    "preact": "^10.25.2",
+    "spdl-core": "^2.0.2",
+    "spotify": "^0.3.0",
+    "spotify-dl": "^1.1.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.3",
