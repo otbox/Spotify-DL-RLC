@@ -1,0 +1,34 @@
+.SelectionBarContainer {
+    display: flex;
+    border: 1px solid #1ED760;
+    border-radius: 0.4rem;
+    justify-content: space-between;
+    padding: 0.5vw;
+    margin-bottom: 1vh;
+}
+
+.SelectionBarContainer * {
+    display: flex;
+    align-items: center;
+    margin-left: 1vw;
+    text-size-adjust: 100%;
+    font-size: 1em;
+}
+
+.MusicDetails {
+    display: flex; 
+    justify-content: space-between;
+    width: 100%;
+}
+
+.MusicDetails img {
+    width: 5vw;
+    height: 5vw;
+    margin-left: 1vw;
+}
+
+.MusicDetails p {
+    text-wrap: wrap;
+    width: 30%;
+    margin-left: 1vw;
+}

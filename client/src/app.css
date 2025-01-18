@@ -1,0 +1,25 @@
+.InfoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.InfoHeader div {display: flex; align-items: center; gap: 0.2vw;}
+
+.search-container {
+    display: flex;
+    gap: 1vw;
+}
+
+#TextFieldLink {
+    width: 100%;
+    border: 1px solid #1ED760;
+    font-size: 12pt;
+    padding: 0.8vw;
+    border-radius: 0.4rem;
+}
+
+
+p {
+    font-size: 1rem;
+}
