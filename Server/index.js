@@ -3,19 +3,16 @@ const path = require('path');
 const fs = require('fs');
 const ytdlp = require("yt-dlp-exec");
 const app = express();
-const Spotify = require('spotifydl-core').default
 const axios = require('axios')
-const ytSearch = require('yt-search');
 const searchYouTube = require('yt-search');
 const MP3Tag = require('mp3tag.js')
+const cors = require('cors');
+const ffmpegPath = require('ffmpeg-static'); 
 
-const credentials = {
-    clientId: 'da08e75d968a4e1caac5082f51af9ba4',
-    clientSecret: '6a7056629a204081ac1c58439b4903e6'
-}
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
 
-const spotify = new Spotify(credentials)
-
+app.use(cors());
 const port = 3000;
 
 
@@ -89,58 +86,57 @@ app.get('/downloadMp3', async (req, res) => {
         
         // writeMP3Tags(outputFile, music);
 
-        // const tags = await constructMetadata(music);
-        // const outputFile = "/home/tboxo/Documentos/Projetos/Server/David Guetta - Hey Mama (Official Video) ft Nicki Minaj_ Bebe Rexha _ Afrojack(MP3_160K)_1.mp3"
-        // const buffer = fs.readFileSync(outputFile)
-        // const mp3tag = new MP3Tag(buffer, true)
+        const tags = await constructMetadata(music);
+        const buffer = fs.readFileSync(outputFile)
+        const mp3tag = new MP3Tag(buffer, true)
 
-        // if (music.coverArt) {
-        //         try {
-        //             const coverImageResponse = await axios({
-        //                 method: 'get',
-        //                 url: music.coverArt,
-        //                 responseType: 'arraybuffer' // Get the image as a buffer
-        //             });
-        //             console.log(coverImageResponse.data);
-        //             fs.writeFileSync("outputFile", coverImageResponse.data);
-        //             const artBuffer =  new Uint8Array(coverImageResponse.data)
+        if (music.coverArt) {
+                try {
+                    const coverImageResponse = await axios({
+                        method: 'get',
+                        url: music.coverArt,
+                        responseType: 'arraybuffer' // Get the image as a buffer
+                    });
+                    console.log(coverImageResponse.data);
+                    fs.writeFileSync("outputFile", coverImageResponse.data);
+                    const artBuffer =  new Uint8Array(coverImageResponse.data)
 
-        //             if (!mp3tag.tags) {
-        //                 mp3tag.tags = {};
-        //             }
-        //             if (!mp3tag.tags.v2) {
-        //                 mp3tag.tags.v2 = {};
-        //             }
+                    if (!mp3tag.tags) {
+                        mp3tag.tags = {};
+                    }
+                    if (!mp3tag.tags.v2) {
+                        mp3tag.tags.v2 = {};
+                    }
 
-        //             mp3tag.tags.v2.APIC = [
-        //                 {
-        //                   format: 'image/jpg',
-        //                   type: 3,
-        //                   description: 'Album image',
-        //                   data: artBuffer
-        //                 }
-        //             ]
+                    mp3tag.tags.v2.APIC = [
+                        {
+                          format: 'image/jpg',
+                          type: 3,
+                          description: 'Album image',
+                          data: artBuffer
+                        }
+                    ]
                     
-        //         } catch (error) {
-        //             console.error('Erro ao baixar a imagem da capa:', error.message);
-        //         }
-        //     }
+                } catch (error) {
+                    console.error('Erro ao baixar a imagem da capa:', error.message);
+                }
+            }
 
-        // console.log(music)
-        // mp3tag.tags.title = music.name;
-        // mp3tag.tags.artist = music.artist;
-        // mp3tag.tags.album =  music.album;
-        // mp3tag.tags.year = music.year;
+        console.log(music)
+        mp3tag.tags.title = music.name;
+        mp3tag.tags.artist = music.artist;
+        mp3tag.tags.album =  music.album;
+        mp3tag.tags.year = music.year;
 
-        // mp3tag.save()
+        mp3tag.save()
 
-        // // Handle error if there's any
-        // if (mp3tag.error !== '') throw new Error(mp3tag.error)
+        // Handle error if there's any
+        if (mp3tag.error !== '') throw new Error(mp3tag.error)
 
-        // mp3tag.read()
-        // console.log(mp3tag.tags)
+        mp3tag.read()
+        console.log(mp3tag.tags)
 
-        // fs.writeFileSync("outputFile.mp3", mp3tag.buffer);
+        // fs.writeFileSync(outputFile, mp3tag.buffer);
 
         // Enviar o arquivo para o cliente
         res.download(outputFile, (err) => {

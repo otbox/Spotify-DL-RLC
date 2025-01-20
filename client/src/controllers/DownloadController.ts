@@ -1,8 +1,8 @@
 import axios from "axios"
 import { MusicType } from "../types/music"
 
-const server0 = "http://localhost:3000/downloadMp3"
-const serverLRC = "http://localhost:3000/downloadLRC"
+const server0 = "http://127.0.0.1:3000/downloadMp3"
+const serverLRC = "http://127.0.0.1:3000/downloadLRC"
 
 const handleDownloadLRC = async (music : MusicType) => {
     try {
@@ -47,14 +47,13 @@ const handleDownloadMusic = async (music : MusicType) => {
 }
 
 export const DownloadPlaylist = (Playlist : MusicType[]) => {
-    console.log(Playlist);
     let i  = 0;
     for (const music of Playlist) {
-        if(music.selected) {
+        if(music.selected === true) {
             console.log(music)
             handleDownloadLRC(music);
             handleDownloadMusic(music);
-            if (i == 1){
+            if (i == 0){
                 break;
             }
             i++;

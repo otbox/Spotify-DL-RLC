@@ -2,10 +2,12 @@
 import { MusicType } from '../types/music';
 import { ItemTypes, SpotifyApi } from '@spotify/web-api-ts-sdk';
 
-// const sdk = SpotifyApi.withClientCredentials("client-id", "secret", ["scope1", "scope2"]);
+
+const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+
 const api = SpotifyApi.withClientCredentials(
-    "da08e75d968a4e1caac5082f51af9ba4",
-    "6a7056629a204081ac1c58439b4903e6"
+    CLIENT_ID, CLIENT_SECRET
 );
 
 type SearchResultType = {
@@ -25,6 +27,7 @@ const SearchPlaylistItems = async (SplittedLink : string[]) : Promise<MusicType[
             url: item.track.external_urls.spotify,
             coverArt: item.track.album.images[0].url,
             year: item.track.album.release_date.substring(0,4),
+            selected: true,
         }));
 } 
 
