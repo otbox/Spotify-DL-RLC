@@ -9,8 +9,10 @@ const MP3Tag = require('mp3tag.js')
 const cors = require('cors');
 const ffmpegPath = require('ffmpeg-static'); 
 
+
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
+
 
 app.use(cors());
 const port = 3000;
@@ -76,6 +78,7 @@ app.get('/downloadMp3', async (req, res) => {
         
         // Baixar o áudio do YouTube e salvar como mp3
         await ytdlp(youtubeUrl, {
+            ffmpegLocation: ffmpegPath,
             output: outputFile,
             extractAudio: true,
             audioFormat: "mp3",
@@ -86,8 +89,8 @@ app.get('/downloadMp3', async (req, res) => {
         
         // writeMP3Tags(outputFile, music);
 
-        const tags = await constructMetadata(music);
-        const buffer = fs.readFileSync(outputFile)
+        // const tags = await constructMetadata(music);
+        const buffer = await fs.readFileSync(outputFile)
         const mp3tag = new MP3Tag(buffer, true)
 
         if (music.coverArt) {
@@ -128,15 +131,15 @@ app.get('/downloadMp3', async (req, res) => {
         mp3tag.tags.album =  music.album;
         mp3tag.tags.year = music.year;
 
-        mp3tag.save()
+        await mp3tag.save()
 
         // Handle error if there's any
         if (mp3tag.error !== '') throw new Error(mp3tag.error)
 
-        mp3tag.read()
-        console.log(mp3tag.tags)
+        // mp3tag.read()
+        // console.log(mp3tag.tags)
 
-        // fs.writeFileSync(outputFile, mp3tag.buffer);
+        await fs.writeFileSync(outputFile, mp3tag.buffer);
 
         // Enviar o arquivo para o cliente
         res.download(outputFile, (err) => {
@@ -158,6 +161,9 @@ app.get('/downloadMp3', async (req, res) => {
     }
 });
 
+app.get("/", (req, res) => {
+    res.send("Servidor rodando");
+})
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
