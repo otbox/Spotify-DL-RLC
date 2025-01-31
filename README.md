@@ -2,21 +2,27 @@
 # Spotify Music Donwloader with Lyrics 
 
 
-
-
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/otbox/Spotify-DL-RLC.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd Spotify-DL-RLC
 ```
+
+### Docker Way
+
+  ```bash
+    docker compose up
+  ```
+
+  Then, access the client by the link provided by terminal or bash.
 
 1. #### Install the node modules 
 
@@ -40,7 +46,7 @@ Go to the project directory
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your .env file get your credentials in https://developer.spotify.com/documentation/web-api and add them to your.env file.
 
 `VITE_SPOTIFY_CLIENT_ID`
 
@@ -48,6 +54,8 @@ To run this project, you will need to add the following environment variables to
 
 
 ## Tech Stack
+
+**Other Techs:** Docker, Docker-Compose
 
 **Client:** Vite, Preact, Axios, Spotify-API
 

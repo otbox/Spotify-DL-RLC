@@ -1,0 +1,29 @@
+version: '3.8'
+
+networks :
+  nNetwork :
+   driver: bridge 
+   ipam:
+      config:
+        - subnet: 192.168.1.0/24 
+          gateway: 192.168.1.1
+
+services :
+  app :
+    build : ./client
+    container_name : spotifyDL-app
+    env_file:
+      - path: .env
+    ports : 
+      - 8080
+    depends_on: 
+      - server 
+  server :
+    build : ./Server
+    container_name : spotifyDL-server
+    ports :
+     - 3000
+    restart : always
+    networks :
+      nNetwork :
+        ipv4_address: 192.168.1.101

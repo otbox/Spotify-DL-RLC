@@ -1,8 +1,8 @@
 import axios from "axios"
 import { MusicType } from "../types/music"
 
-const server0 = "http://127.0.0.1:3000/downloadMp3"
-const serverLRC = "http://127.0.0.1:3000/downloadLRC"
+const server0 = "http://192.168.1.101:3000/downloadMp3"
+const serverLRC = "http://192.168.1.101:3000/downloadLRC"
 
 const handleDownloadLRC = async (music : MusicType) => {
     try {
@@ -53,10 +53,6 @@ export const DownloadPlaylist = (Playlist : MusicType[]) => {
             console.log(music)
             handleDownloadLRC(music);
             handleDownloadMusic(music);
-            if (i == 0){
-                break;
-            }
-            i++;
         }
     }
 

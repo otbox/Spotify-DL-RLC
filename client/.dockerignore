@@ -1,0 +1,7 @@
+node_modules
+*.mp3
+*.lrc
+.vscode
+*.webm
+.env
+teste
