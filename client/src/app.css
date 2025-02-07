@@ -14,11 +14,24 @@
 #TextFieldLink {
     width: 100%;
     border: 1px solid #1ED760;
+    background-color: transparent;
     font-size: 12pt;
     padding: 0.8vw;
     border-radius: 0.4rem;
 }
 
+.howtoUse {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 40vw;
+}
+
+.dolittle { 
+    width: 80%;
+    height: 80%;
+}
 
 p {
     font-size: 1rem;

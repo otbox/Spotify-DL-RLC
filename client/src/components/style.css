@@ -32,3 +32,10 @@
     width: 30%;
     margin-left: 1vw;
 }
+
+.SelectionBarContainer .dollitle {
+    margin-right: -5vw;
+    margin-left: -5vw;
+    width: 20vw;
+    height: 5vw;
+}       
