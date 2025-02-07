@@ -3,7 +3,7 @@ import { MusicType } from "./music"
 export type PlaylistInfoType = {
     name : string,
     artist : string,
-    image_cover : string
+    coverArt : string
 }
 
 export type PlaylistTypeRes = {

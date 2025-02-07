@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'preact/hooks'
 import './app.css'
 import { SelectionBar } from './components/SelectionBar'
-import { NextSongsOfPlaylist, SearchHandle } from './controllers/SearchController'
+import { NextSongsHandler, SearchHandle } from './controllers/SearchController'
 import { DlOptions } from './types/options'
 import { MusicType } from './types/music'
 import { DownloadPlaylist } from './controllers/DownloadController'
 import { PlaylistInfoType } from './types/playlist'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { InfoBar } from './components/InfoBar'
+import { NextSongsOfPlaylist } from './controllers/handlers/Playlist'
 // const MusicExample : MusicType[] = [{album : 'Gates of Fried Chicken of Death', name : 'Metal is the Law', autor:'Massacration', time: '3:47'}]
 
 export function App() { 
@@ -46,7 +47,8 @@ export function App() {
   
   const moreMusic = async () => {
     const path = new URL(link).pathname;
-    const newData = await NextSongsOfPlaylist(path);
+    const newData = await NextSongsHandler(path);
+    if (newData)
     setData(prevData => [...(prevData ?? []), ...newData]); 
   }
   
@@ -68,7 +70,7 @@ export function App() {
           <button onClick={() => handleFetchData()}>Search</button>
         </div>
         {infoData && (
-          <InfoBar numberOfMusic={data ? data?.length : 0}  image_cover={infoData?.image_cover} name= {infoData?.name} setSearchedData={setData} setSearchedInfo={setInfoData} moreMusic={moreMusic}  />
+          <InfoBar numberOfMusic={data ? data?.length : 0}  image_cover={infoData?.coverArt} name= {infoData?.name} setSearchedData={setData} setSearchedInfo={setInfoData} moreMusic={moreMusic}  />
         )}
         <div className={"InfoHeader"}>
           <h3>Musics for Download: {downloadOptions.numberOfMusicstoDl}</h3>

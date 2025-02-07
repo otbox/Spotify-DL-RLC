@@ -26,7 +26,6 @@ export class SelectionBar extends Component<ExpandableProps , ExpandableState> {
     render(_props?: Readonly<Attributes & { children?: ComponentChildren; ref?: Ref<any> | undefined; }> | undefined, _state?: Readonly<{}> | undefined, _context?: any): ComponentChildren {
         const { Music , index, onToggle} = this.props
         const { album, artist, coverArt, duration, name, selected,downloading,lyrics,music,url,year} = Music
-        // const { selected } = this.state
         
         const Duration: MusicDuration = {
             hour: Math.floor(duration / (1000 * 60 * 60)),
@@ -46,8 +45,6 @@ export class SelectionBar extends Component<ExpandableProps , ExpandableState> {
                         <p>{artist}</p>
                     </div>
                     <p>{Duration.hour ? Duration.hour + ":" : ""}{Duration.minutes}:{String(Duration.seconds).padStart(2, '0')}</p>
-                    {/* <iframe src="https://lottie.host/embed/ab71f12c-fc2d-49ea-9c70-e9525681a971/VknaSxE49H.lottie"/>
-                    //  */}
 
                     {downloading && <DotLottieReact
                         src="https://lottie.host/ab71f12c-fc2d-49ea-9c70-e9525681a971/VknaSxE49H.lottie" // Ampulheta
@@ -56,13 +53,13 @@ export class SelectionBar extends Component<ExpandableProps , ExpandableState> {
                         className={"dollitle"}
                         />
                         }
-                    {music && <DotLottieReact
+                    {music == true  && <DotLottieReact
                         src="https://lottie.host/c135baf5-d513-4c7b-8427-55a375d0eef5/1KsX7C4dIi.lottie" // Music 
                         autoplay
                         className={"dollitle"}
                         />
                     }
-                    {lyrics && <DotLottieReact
+                    {lyrics == true && <DotLottieReact
                         src="https://lottie.host/b556a89c-c996-44cb-bcd1-44beabf1dc21/SRPaKNqNoS.lottie" // Letter 
                         autoplay
                         className={"dollitle"}
