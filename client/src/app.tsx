@@ -8,7 +8,6 @@ import { DownloadPlaylist } from './controllers/DownloadController'
 import { PlaylistInfoType } from './types/playlist'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { InfoBar } from './components/InfoBar'
-import { NextSongsOfPlaylist } from './controllers/handlers/Playlist'
 // const MusicExample : MusicType[] = [{album : 'Gates of Fried Chicken of Death', name : 'Metal is the Law', autor:'Massacration', time: '3:47'}]
 
 export function App() { 
@@ -117,7 +116,6 @@ export function App() {
                     src="https://lottie.host/a532e3a8-5d27-4d23-82f3-76631c271d7e/jru7XTG1vy.lottie"
                     loop
                     autoplay
-                    // play={this.state.downloaded}
                 />
               </div>
             </div>

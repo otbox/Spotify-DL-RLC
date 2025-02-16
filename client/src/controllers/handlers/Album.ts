@@ -1,6 +1,5 @@
 import { Page, SimplifiedTrack, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { MusicType } from "../../types/music";
-import { PlaylistTypeRes } from "../../types/playlist";
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
@@ -17,9 +16,7 @@ const api = SpotifyApi.withClientCredentials(
 // }
 
 const mappingMusicArray = async (PlaylistItems: Page<SimplifiedTrack>, albumInfo : Partial<MusicType>, idInit : number ) : Promise<MusicType[]> => { 
-    return PlaylistItems.items.map((item) => { 
-        console.log(item)
-        return (
+    return PlaylistItems.items.map((item) => (
         {
             id : idInit++, 
             name: item.name,
@@ -27,18 +24,13 @@ const mappingMusicArray = async (PlaylistItems: Page<SimplifiedTrack>, albumInfo
             artist: item.artists[0].name,
             duration: item.duration_ms,
             url: item.external_urls.spotify,
-            coverArt: albumInfo.coverArt,
+            coverArt: albumInfo.coverArt ?? "",
             year: albumInfo.year,
             selected: true,
             downloading: false,
             lyrics: false,
             music: false
-        })});
-}
-
-
-type album = {
-
+        }));
 }
 
 const SearchAlbumInfo = async (id : string)  => {
