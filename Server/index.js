@@ -5,9 +5,9 @@ const ytdlp = require("yt-dlp-exec");
 const app = express();
 const axios = require('axios')
 const searchYouTube = require('yt-search');
-const MP3Tag = require('mp3tag.js')
 const cors = require('cors');
-const ffmpegPath = require('ffmpeg-static'); 
+const ffmpegPath = require('ffmpeg-static');
+const NodeID3 = require('node-id3');
 
 
 const ffmpeg = require('fluent-ffmpeg');
@@ -18,7 +18,7 @@ app.use(cors());
 const port = 3000;
 
 
-  const GetLyrics = async (musicaEscolhida) => {
+const GetLyrics = async (musicaEscolhida) => {
     let FileD = { content: "", name: "" };
     try {
         const response = await axios.get('https://lrclib.net/api/get?', {
@@ -44,12 +44,12 @@ app.get('/downloadLRC', async (req, res) => {
     // musicRequisition ? console.log(musicRequisition) : console.log('Nenhum musica foi escolhida.');
     // const MusicTest = { name: 'For Whom The Bell Tolls', album: 'Ride The Lightning', artist: 'Metallica' };
     const LRCdata = await GetLyrics(musicRequisition);
-    
+
     if (LRCdata.content) {
         // Set headers to indicate a file download
         res.setHeader('Content-Disposition', `attachment; filename="${LRCdata.name}"`);
         res.setHeader('Content-Type', 'text/plain');
-        
+
         // Send the lyrics content directly
         res.send(LRCdata.content);
     } else {
@@ -59,7 +59,7 @@ app.get('/downloadLRC', async (req, res) => {
 
 app.get('/downloadMp3', async (req, res) => {
     try {
-        const music = req.query.musicRequisition; 
+        const music = req.query.musicRequisition;
         // const songUrl = req.query.musicRequisition.url; 
         // if (!songUrl) {
         //     return res.status(400).send('URL da música do Spotify não fornecida');
@@ -73,9 +73,9 @@ app.get('/downloadMp3', async (req, res) => {
         if (!youtubeUrl) throw new Error("Link do YouTube não encontrado.");
 
         const outputFile = path.join(__dirname, `${music.name.replace(/[<>:"/\\|?*]/g, "")}.mp3`);
-        
+
         console.log("Baixando com yt-dlp...");
-        
+
         // Baixar o áudio do YouTube e salvar como mp3
         await ytdlp(youtubeUrl, {
             ffmpegLocation: ffmpegPath,
@@ -84,62 +84,38 @@ app.get('/downloadMp3', async (req, res) => {
             audioFormat: "mp3",
             audioQuality: 0,
         });
-        
+
         console.log("Download concluído:", outputFile);
-        
-        // writeMP3Tags(outputFile, music);
+        try {
+            const coverImageResponse = await axios({
+                method: 'get',
+                url: music.coverArt,
+                responseType: 'arraybuffer' // Get the image as a buffer
+            });
+            console.log(coverImageResponse.data);
+            // fs.writeFileSync("outputFile", coverImageResponse.data);
+            const artBuffer = Buffer.from(coverImageResponse.data)
 
-        // const tags = await constructMetadata(music);
-        const buffer = await fs.readFileSync(outputFile)
-        const mp3tag = new MP3Tag(buffer, true)
-
-        if (music.coverArt) {
-                try {
-                    const coverImageResponse = await axios({
-                        method: 'get',
-                        url: music.coverArt,
-                        responseType: 'arraybuffer' // Get the image as a buffer
-                    });
-                    console.log(coverImageResponse.data);
-                    fs.writeFileSync("outputFile", coverImageResponse.data);
-                    const artBuffer =  new Uint8Array(coverImageResponse.data)
-
-                    if (!mp3tag.tags) {
-                        mp3tag.tags = {};
-                    }
-                    if (!mp3tag.tags.v2) {
-                        mp3tag.tags.v2 = {};
-                    }
-
-                    mp3tag.tags.v2.APIC = [
-                        {
-                          format: 'image/jpg',
-                          type: 3,
-                          description: 'Album image',
-                          data: artBuffer
-                        }
-                    ]
-                    
-                } catch (error) {
-                    console.error('Erro ao baixar a imagem da capa:', error.message);
+            const tags = {
+                title: music.title,
+                artist: music.artist,
+                album: music.album,
+                year: music.year,
+                APIC: {
+                    mime: "image/jpeg", 
+                    type: 3, 
+                    description: "Cover Art",
+                    imageBuffer: artBuffer
                 }
-            }
+            };
 
-        console.log(music)
-        mp3tag.tags.title = music.name;
-        mp3tag.tags.artist = music.artist;
-        mp3tag.tags.album =  music.album;
-        mp3tag.tags.year = music.year;
-
-        await mp3tag.save()
-
-        // Handle error if there's any
-        if (mp3tag.error !== '') throw new Error(mp3tag.error)
-
-        // mp3tag.read()
-        // console.log(mp3tag.tags)
-
-        await fs.writeFileSync(outputFile, mp3tag.buffer);
+            // Escreve os metadados no arquivo MP3
+            console.log("adicionando metadados para : ", outputFile);
+            await NodeID3.write(tags, outputFile);
+            console.log("metadados adicionados");  
+        } catch (error) {
+            console.log(error)
+        }
 
         // Enviar o arquivo para o cliente
         res.download(outputFile, (err) => {
@@ -147,10 +123,10 @@ app.get('/downloadMp3', async (req, res) => {
                 console.error('Erro ao enviar o arquivo:', err);
                 res.status(500).send('Erro ao fazer download do arquivo.');
             } else {
-                // Apagar o arquivo depois de enviado (se desejar)
+                // Apaga Arquivos depois de enviado 
                 fs.unlink(outputFile, (err) => {
-                    if (err) console.error('Erro ao apagar o arquivo:', err) 
-                        else  console.log("Musica Deletada"); 
+                    if (err) console.error('Erro ao apagar o arquivo:', err)
+                    else console.log("Musica Deletada");
                 });
             }
         });
@@ -167,4 +143,4 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
-  });
+});
