@@ -24,6 +24,8 @@ Go to the project directory
 
   Then, access the client by the link provided by terminal or bash.
 
+  ### Or, you can run the client and server separately.
+
 1. #### Install the node modules 
 
     On client directory run
