@@ -2,10 +2,10 @@ import axios from "axios"
 import { MusicType } from "../types/music"
 import { Dispatch, StateUpdater } from "preact/hooks";
 
-// const server0 = "http://192.168.1.101:3000/downloadMp3"
-const server0 = "http://127.0.0.1:3000/downloadMp3"
-const serverLRC = "http://127.0.0.1:3000/downloadLRC"
-// const serverLRC = "http://192.168.1.101:3000/downloadLRC"
+const server0 = "http://192.168.1.101:3000/downloadMp3"
+// const server0 = "http://127.0.0.1:3000/downloadMp3"
+// const serverLRC = "http://127.0.0.1:3000/downloadLRC"
+const serverLRC = "http://192.168.1.101:3000/downloadLRC"
 
 const handleDownloadLRC = async (music : MusicType, setData : Dispatch<StateUpdater<MusicType[] | undefined>>) => {
     try {
