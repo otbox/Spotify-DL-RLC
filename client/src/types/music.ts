@@ -10,7 +10,8 @@ export type MusicType = {
     selected? : boolean,
     downloading : boolean | "failed",
     lyrics : boolean | "failed",
-    music : boolean | "failed"
+    music : boolean | "failed",
+    total? : number
 }
 
 export type MusicDuration = {

@@ -43,7 +43,6 @@ export const SearchHandle = async ({ link, setSearchedData, setSearchedInfo }: S
     const SplittedLink: string[] = link.split('/');
     const TypeOfSearch: ItemTypes = SplittedLink[1] as ItemTypes;
     try {
-
         switch (TypeOfSearch) {
             case 'artist':
                 console.log('artist')
@@ -81,8 +80,11 @@ export const SearchHandle = async ({ link, setSearchedData, setSearchedInfo }: S
                 // return undefined;
                 break;
         }
-    } catch (error) {
-        console.log(error);
+    } catch (error : any) {
+        setSearchedInfo("erro")
+        if (error.message.includes("404")) {
+            setSearchedInfo("404");
+        }
     }
 }
 

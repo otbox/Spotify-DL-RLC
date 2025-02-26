@@ -18,6 +18,8 @@ Go to the project directory
 
 ### Docker Way
 
+  On the folder of the project (Spotify-DL-RLC) add the **.env** file with the environment variables. On below has the link to get the free API keys.
+
   ```bash
     docker compose up
   ```

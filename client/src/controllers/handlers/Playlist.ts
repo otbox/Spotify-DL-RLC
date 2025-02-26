@@ -23,7 +23,7 @@ const mappingMusicArray = async (PlaylistItems : Page<PlaylistedTrack<Track>>, i
             selected: true,
             downloading: false,
             lyrics: false,
-            music: false
+            music: false,
         }));
 }
 
@@ -35,7 +35,7 @@ export const NextSongsOfPlaylist = async (url : string, idCounter : number) : Pr
     return mappingMusicArray(PlaylistItems, idCounter);
 }
 
-const SearchPlaylistInfo = async (id : string)  => {
+const SearchPlaylistInfo = async (id : string, total : number)  => {
     const PlaylistInfo = ((await api.playlists.getPlaylist(id)));
 
     console.log(PlaylistInfo);
@@ -43,12 +43,17 @@ const SearchPlaylistInfo = async (id : string)  => {
         name: PlaylistInfo.name,
         artist: PlaylistInfo.owner.display_name,
         coverArt: PlaylistInfo.images[0].url,
+        total: total
     }
     return res;
 }
 
 export const SearchPlaylistHandler = async (SplittedLink : string[], idCounter : number) : Promise<PlaylistTypeRes> => {
     const PlaylistItems = await mappingMusicArray(await api.playlists.getPlaylistItems(SplittedLink[2]), idCounter);
-    const PlaylistInfo = await SearchPlaylistInfo(SplittedLink[2]);
+    const PlaylistInfo = await SearchPlaylistInfo(SplittedLink[2], PlaylistItems.length);
+    if (!PlaylistInfo || !PlaylistItems) {
+        throw "Playlist não encontrado";
+    }
+
     return {playlistInfo : PlaylistInfo, tracks: PlaylistItems}
 } 

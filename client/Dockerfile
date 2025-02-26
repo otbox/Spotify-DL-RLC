@@ -3,7 +3,8 @@
 FROM node:lts-alpine 
 COPY package*.json ./
 WORKDIR /app
-COPY . .
-RUN npm install
-CMD ["yarn", "dev"]
+# RUN npm install --only=production
+COPY dist ./dist 
+RUN npm install -g http-server
+CMD ["http-server","dist", "-p", "8080"]
 EXPOSE 8080

@@ -29,7 +29,7 @@ const mappingMusicArray = async (PlaylistItems: Page<SimplifiedTrack>, albumInfo
             selected: true,
             downloading: false,
             lyrics: false,
-            music: false
+            music: false,
         }));
 }
 
@@ -43,6 +43,7 @@ const SearchAlbumInfo = async (id : string)  => {
         coverArt: AlbumInfo.images[0].url,
         url : AlbumInfo.external_urls.spotify,
         year : AlbumInfo.release_date.substring(0,4),
+        total : AlbumInfo.total_tracks,
     }
     console.log(res)
     return res;
@@ -59,6 +60,9 @@ export const SearchAlbumHandler = async (SplittedLink : string[], idCounter : nu
     const AlbumItems = await mappingMusicArray(await api.albums.tracks(SplittedLink[2]), AlbumInfo, idCounter);
     console.log(AlbumItems)
     console.log("items:", AlbumItems)
-    
+
+    if (!AlbumInfo || !AlbumInfo) {
+        throw "Album não encontrado";
+    }
     return {playlistInfo : AlbumInfo, tracks: AlbumItems}
 } 

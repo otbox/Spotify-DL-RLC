@@ -13,7 +13,7 @@ import { InfoBar } from './components/InfoBar'
 export function App() { 
   const [link, setLink] = useState<string>("")
   const [data, setData] = useState<MusicType[] | undefined>(() => []);
-  const [infoData, setInfoData] = useState<PlaylistInfoType>();
+  const [infoData, setInfoData] = useState<PlaylistInfoType | "error" | "404" >();
   const [downloadOptions, setDownloadOptions] = useState<DlOptions>({ lyrics: true, maxSearchMusic: 100 })
   const SelectedAllMusicSwitch = useRef<HTMLInputElement>(null)
 
@@ -68,9 +68,11 @@ export function App() {
           <input onChange={(e: any) => { setLink(e.target.value) }} type="text" name="" id="TextFieldLink" />
           <button onClick={() => handleFetchData()}>Search</button>
         </div>
-        {infoData && (
+        {typeof(infoData) === 'object'? (
           <InfoBar numberOfMusic={data ? data?.length : 0}  image_cover={infoData?.coverArt} name= {infoData?.name} setSearchedData={setData} setSearchedInfo={setInfoData} moreMusic={moreMusic}  />
-        )}
+        ) : ("")}
+        {infoData === "404" ? (<p>Não encontrado</p>) : ("")}
+        {infoData === "error" ? (<p>Erro do Servidor</p>) : ("")}
         <div className={"InfoHeader"}>
           <h3>Musics for Download: {downloadOptions.numberOfMusicstoDl}</h3>
           <button onClick={() => handleDownload()}>Download</button>
