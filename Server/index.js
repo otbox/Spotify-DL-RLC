@@ -8,7 +8,9 @@ const searchYouTube = require('yt-search');
 const cors = require('cors');
 const ffmpegPath = require('ffmpeg-static');
 const NodeID3 = require('node-id3');
+const pLimit = require('p-limit');
 
+const limit = pLimit(5); 
 
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -57,7 +59,18 @@ app.get('/downloadLRC', async (req, res) => {
     }
 });
 
-app.get('/downloadMp3', async (req, res) => {
+app.get('/downloadMp3', (req, res) => {
+    const music = req.query.musicRequisition;
+
+    limit(() => baixarEMandarMp3(music, res))
+        .catch(err => {
+            console.error("Erro no download:", err);
+            if (!res.headersSent) res.status(500).send('Erro ao processar a música.');
+        });
+});
+
+
+async function baixarEMandarMp3(music, res) {
     try {
         const music = req.query.musicRequisition;
         // const songUrl = req.query.musicRequisition.url; 
@@ -135,7 +148,7 @@ app.get('/downloadMp3', async (req, res) => {
         console.error('Erro ao baixar a música:', error.message);
         res.status(500).send('Erro ao processar a música.');
     }
-});
+};
 
 app.get("/", (req, res) => {
     res.send("Servidor rodando");
