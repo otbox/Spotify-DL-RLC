@@ -1,24 +1,23 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const ytdlp = require("yt-dlp-exec");
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import ytdlp from 'yt-dlp-exec';
+import axios from 'axios';
+import searchYouTube from 'yt-search';
+import cors from 'cors';
+import ffmpegPath from 'ffmpeg-static';
+import NodeID3 from 'node-id3';
+import pLimit from 'p-limit';
+import ffmpeg from 'fluent-ffmpeg';
+
+const __dirname = path.resolve();
 const app = express();
-const axios = require('axios')
-const searchYouTube = require('yt-search');
-const cors = require('cors');
-const ffmpegPath = require('ffmpeg-static');
-const NodeID3 = require('node-id3');
-const pLimit = require('p-limit');
+const limit = pLimit(5);
 
-const limit = pLimit(5); 
-
-const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
-
 
 app.use(cors());
 const port = 3000;
-
 
 const GetLyrics = async (musicaEscolhida) => {
     let FileD = { content: "", name: "" };
@@ -69,10 +68,9 @@ app.get('/downloadMp3', (req, res) => {
         });
 });
 
-
 async function baixarEMandarMp3(music, res) {
     try {
-        const music = req.query.musicRequisition;
+        // const music = req.query.musicRequisition;
         // const songUrl = req.query.musicRequisition.url; 
         // if (!songUrl) {
         //     return res.status(400).send('URL da música do Spotify não fornecida');
